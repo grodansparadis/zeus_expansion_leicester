@@ -1,0 +1,1382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Simple driver code for Microchip MRF24J40 radio «  Nerd Fever</title>
+
+<link rel="alternate" type="application/rss+xml" title="Nerd Fever RSS Feed" href="http://nerdfever.com/?feed=rss2">
+<link rel="alternate" type="application/atom+xml" title="Nerd Fever Atom Feed" href="http://nerdfever.com/?feed=atom">
+<link rel="pingback" href="http://nerdfever.com/xmlrpc.php">
+<link rel="shortcut icon" href="http://nerdfever.com/wp-content/themes/arclite/favicon.ico">
+
+
+<style type="text/css">
+@import "http://nerdfever.com/wp-content/themes/arclite/style.css";
+@import "http://nerdfever.com/wp-content/themes/arclite/options/side-blue.css";
+@import "http://nerdfever.com/wp-content/themes/arclite/options/content-default.css";
+@import "http://nerdfever.com/wp-content/themes/arclite/options/header-fire.css";
+.post-content .wp-caption, .post-content img, .attachment img, .alignleft img
+{
+margin:4px 10px 4px 0px;
+}
+
+.wp-caption-text
+{
+color:#504d4c;
+font-size:11.3px;
+}
+
+BLOCKQUOTE
+{
+border:none;
+background:none;
+color:inherit;
+padding-left:3.5em;
+}
+
+#pagetitle H1.logo 
+{
+font-family:"Arial Black",Arial, Helvetica, Sans, FreeSans, Jamrul, Garuda, Kalimati;
+letter-spacing:-3.5px;
+}
+
+#pagetitle H4
+{
+letter-spacing:-1px;
+}
+
+#sidebar .fadeThis
+{
+text-transform:none;
+}
+
+</style>
+<!--[if lte IE 6]>
+<style type="text/css" media="screen">
+ @import "http://nerdfever.com/wp-content/themes/arclite/ie6.css";
+</style>
+<![endif]-->
+
+ <link rel="alternate" type="application/rss+xml" title="Nerd Fever » Simple driver code for Microchip MRF24J40 radio Comments Feed" href="http://nerdfever.com/?feed=rss2&amp;p=1797">
+		<script async="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/cbgapi.loaded_2"></script><script async="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/cbgapi.loaded_1"></script><script src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/recaptcha__en.js" async="" type="text/javascript"></script><script src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/ca-pub-651397917760.js" type="text/javascript" async=""></script><script async="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/cbgapi.loaded_0"></script><script src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/ga.js" async="" type="text/javascript"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"http:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"http:\/\/nerdfever.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.3.1"}};
+			!function(a,b,c){function d(a){var c=b.createElement("canvas"),d=c.getContext&&c.getContext("2d");return d&&d.fillText?(d.textBaseline="top",d.font="600 32px Arial","flag"===a?(d.fillText(String.fromCharCode(55356,56812,55356,56807),0,0),c.toDataURL().length>3e3):(d.fillText(String.fromCharCode(55357,56835),0,0),0!==d.getImageData(16,16,1,1).data[0])):!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g;c.supports={simple:d("simple"),flag:d("flag")},c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.simple&&c.supports.flag||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/wp-emoji-release.js"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<!-- This site uses the Google Analytics by Yoast plugin v5.4.2 - Universal disabled - https://yoast.com/wordpress/plugins/google-analytics/ -->
+<script type="text/javascript">
+
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-5250978-1']);
+	_gaq.push(['_gat._forceSSL']);
+	_gaq.push(['_trackPageview']);
+
+	(function () {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+
+</script>
+<!-- / Google Analytics by Yoast -->
+<script gapi_processed="true" type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/plusone.js">{lang: "en-US"}</script><script type="text/javascript">
+function wdgpo_plusone_click (el) {
+	if (typeof window._gaq != "undefined") {
+		 _gaq.push(['_trackEvent', 'Google +1', el.state, document.title]);
+	}
+}
+</script><script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/jquery.js"></script>
+<script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/jquery-migrate.js"></script>
+<script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/fdfootnotes.js"></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://nerdfever.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://nerdfever.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Notes on using Eagle PCB" href="http://nerdfever.com/?p=1769">
+<link rel="next" title="The only good patent is an expired patent" href="http://nerdfever.com/?p=1841">
+<meta name="generator" content="WordPress 4.3.1">
+<link rel="canonical" href="http://nerdfever.com/?p=1797">
+<link rel="shortlink" href="http://nerdfever.com/?p=1797">
+		<style type="text/css">
+			.ads {
+				position: relative;
+				text-align: center;
+				clear: both;
+			}
+		</style><link href="https://plus.google.com/107110792395568123171/" rel="publisher"><style type="text/css" id="syntaxhighlighteranchor"></style>
+
+</head>
+<body class="inner">
+ <!-- page wrap -->
+ <div id="page" class="with-sidebar">
+
+  <!-- header -->
+  <div id="header-wrap">
+   <div id="header" class="block-content">
+     <div id="pagetitle">
+
+            <h1 class="logo"><a href="http://nerdfever.com/">Nerd Fever</a></h1>
+      
+      <h4>Or, random stuff posted for the delight and information of my fellow nerds.</h4>      <div class="clear"></div>
+
+                  <!-- search form -->
+      <div class="search-block">
+        <div class="searchform-wrap">
+          <form method="get" id="searchform" action="http://nerdfever.com/">
+            <fieldset>
+            <input name="s" id="searchbox" class="searchfield" value="Search" onfocus="if(this.value == 'Search') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search';}" type="text">
+             <input value="Go" class="go" type="submit">
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <!-- /search form -->
+      
+     </div>
+
+     <!-- main navigation -->
+     <div id="nav-wrap1">
+      <div id="nav-wrap2">
+        <ul id="nav">
+                     <li id="nav-homelink"><a class="fadeThis" href="http://nerdfever.com/" title="Click for Home"><span>Home</span></a></li>
+                   <li class="page_item page-item-2"><a class="fadeThis" href="http://nerdfever.com/?page_id=2"><span>About me</span></a></li>
+<li class="page_item page-item-695"><a class="fadeThis" href="http://nerdfever.com/?page_id=695"><span>GPS-guided Rocket Recovery Project</span></a></li>
+        </ul>
+      </div>
+     </div>
+     <!-- /main navigation -->
+
+   </div>
+  </div>
+  <!-- /header -->
+
+<!-- main wrappers -->
+<div id="main-wrap1">
+ <div id="main-wrap2">
+
+  <!-- main page block -->
+  <div id="main" class="block-content">
+   <div class="mask-main rightdiv">
+    <div class="mask-left">
+
+     <!-- first column -->
+     <div class="col1">
+      <div id="main-content">
+
+              <div class="navigation">
+          <div class="alignleft">« <a href="http://nerdfever.com/?p=1769" rel="prev">Notes on using Eagle PCB</a></div>
+          <div class="alignright"><a href="http://nerdfever.com/?p=1841" rel="next">The only good patent is an expired patent</a> »</div>
+          <div class="clear"></div>
+        </div>
+
+
+        <!-- post -->
+        <div id="post-1797" class="post-1797 post type-post status-publish format-standard hentry category-electronics category-software">
+           <h2 class="post-title">Simple driver code for Microchip MRF24J40 radio</h2>
+              <div class="post-content clearfix">
+    	       <div class="wdgpo wdgpo_standard_count"><div id="___plusone_0" style="text-indent: 0px; margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 106px; height: 24px;"><iframe title="+1" data-gapiattached="true" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/fastbutton.htm" name="I0_1445011300872" id="I0_1445011300872" vspace="0" tabindex="0" style="position: static; top: 0px; width: 106px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 24px;" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" width="100%"></iframe></div></div> <p><a href="http://nerdfever.com/?p=1457">Back in September 2011</a> I wrote about the rocket telemetry system I built using the Microchip MRF24J40MB radio module.</p>
+<p>As I mentioned back then, I ended up re-writing Microchip’s “MiWi 
+P2P” stack to vastly simplify it for my application. A few people have 
+asked for a copy of my simplified driver code, and today I’m posting it 
+(after having cleaned up a few loose ends).</p>
+<p>The radio supports IEEE 802.15.4 on the 2.4 GHz ISM band. The “-MB” 
+is Microchip’s long-range module – it has the radio, antenna, power 
+amplifier (PA), and low noise amplifier (LNA), and it’s good for ranges 
+of 2500 meters or more (line-of-sight, outdoors). It comes pre-approved 
+by the FCC for unlicensed use. You can read my old post for more info 
+about the module.</p>
+<h3>File package</h3>
+<p>To get started, <a href="http://nerdfever.com/wp-content/uploads/2012/01/MRF24J40RadioDemo1.zip">download the ZIP file from here</a>.</p>
+<blockquote><p>Update 2012-03: <a href="http://www.microchip.com/forums/showprofile.aspx?memid=70823">“maxruben”</a> from the <a href="http://www.microchip.com/forums/m629020.aspx">Microchip Forum</a> has ported this driver to the PIC24. <a href="http://nerdfever.com/wp-content/uploads/2012/01/MRF24J40RadioDemoPic24.zip">Click here&nbsp;to download his PIC24 version.</a> I haven’t tested it, but he says it works. (Thanks for permission to post this!)</p>
+<p>I’m also told the code has been successfully ported to the PIC18, but
+ I don’t have a copy of that. (If someone sends me one, I’ll post it 
+here.)</p></blockquote>
+<p>This contains a whole&nbsp;buildable&nbsp;project (for MPLAB IDE 
+v8.83) that works on my PIC32MX440-based platform. &nbsp;I’ve built it 
+with C32 v1.11b and v2.02; it should be trivial to port it to other MCUs
+ (see notes about that below).</p>
+<p>The files include a very short demo program in main.c that shows how to use the driver to send and receive simple packets.</p>
+<p>The driver itself consists of 3 files:</p>
+<blockquote><p>MRF24J40.c – Driver source code.<br>
+MRF24J40.h – Headers and public function declarations.<br>
+radioAddress.h – Sets the address for your radio.</p></blockquote>
+<p>Now would be a good time to unzip the files and have a quick look at the source code.</p>
+<p>Oh, and:</p>
+<blockquote><p><strong>Software rights</strong>: I hereby grant everyone and everything in the universe permission <em>– to the extent I have rights to grant –</em>
+ to use and modify this software for any purpose whatsoever. In 
+exchange, you agree not to sue me about it. I make no promises. By using
+ the design you agree that if you’re unhappy the most I owe you is what 
+you paid me (zip). That seems fair.</p>
+<p>Be aware that the original MiWi P2P v3.1.3 code this started from (of
+ which there might not be any code left) was copyrighted by Microchip – 
+they offer it free for use with their hardware (which is all it’s useful
+ for), and I doubt they’d want to sue their own customers over it, but 
+talk to them if you have concerns.</p></blockquote>
+<p>That having been said, if you work for Microchip (this means you, 
+Yifeng) and find this code useful enough to refer it to customers, or if
+ you want to supply it directly, you are very welcome to do so. I’d 
+appreciate (but do not demand) in return (a) credit in the source code 
+to this posting on NerdFever.com, and (b) a small token of your 
+appreciation. A RealICE would be great. If that’s too much, how about a 
+Microchip T-shirt or coffee mug? (I already have a ICD3 and a Microchip 
+bag; but swag is good. You know how to find me.)</p>
+<blockquote><p>Update: A free RealICE arrived about 2 weeks after I posted this. &nbsp;Thank you, Microchip (and Yifeng)!</p></blockquote>
+<h3>General concept – Initialization</h3>
+<p>Call RadioInit() to initialize the radio.</p>
+<h3>General concept – Transmission</h3>
+<p>To transmit a packet, fill out the “Tx” structure to describe the packet, then call RadioTxPacket().</p>
+<h3>General concept – Reception</h3>
+<p>Call RadioRXPacket(). If there is at least one received packet the 
+return value is non-zero (it returns the number of un-processed received
+ packets) and the next packet is described by structure “Rx”.</p>
+<p>Do what you want with the packet, and then call RadioDiscardPacket() 
+to throw away that packet. Now you can call RadioRXPacket() again to get
+ the next one (if any).</p>
+<h3>API – Transmitting</h3>
+<p><span style="text-decoration: underline;"><em>void RadioTXRaw(void);</em></span></p>
+<p>Low-level routine to transmit a single packet described by Tx.</p>
+<p>The Tx structure must be completely setup before calling this 
+routine. (Don’t set the lqi or rssi fields; these are used only on 
+received packets.)<br>
+<span id="more-1797"></span><br>
+It does no error checking – it assumes the transmitter is not busy, and 
+does not do anything automatically (like incrementing the frame number 
+or recovering from crashes). It does not block.</p>
+<p>This routine is not normally used as an API, but it is available for 
+transmitting unusual packets. For normal use, call RadioTXPacket() 
+instead.</p>
+<p><span style="text-decoration: underline;"><em>void RadioTXPacket(void);</em></span></p>
+<p>High-level API to transmit a single packet.</p>
+<p>Fill out the following fields of the “Tx” structure to describe your packet, then call this routine to transmit:</p>
+<blockquote><p>unsigned frameType // normally PACKET_TYPE_DATA<br>
+unsigned securityEnabled // must be 0 (security not supported)<br>
+unsigned framePending // must be 0<br>
+unsigned ackRequest // usually 1<br>
+unsigned panIDcomp // usually 1<br>
+unsigned dstAddrMode // usually SHORT_ADDR_FIELD<br>
+unsigned frameVersion // must be 0<br>
+unsigned srcAddrMode // usually NO_ADDR_FIELD<br>
+UINT16 dstPANID // PAN ID of destination radio<br>
+UINT64 dstAddr; // address of destination radio<br>
+UINT8 payloadLength // length of payload field (bytes)<br>
+UINT8 * payload // points at payload start</p></blockquote>
+<p>You don’t have to fill out the other fields; they’ll be filled automatically.&nbsp;<em>(See the RadioInitP2P() function below; this will fill out most of this stuff for you.)</em></p>
+<p>Any fields that are the same as the previous packet don’t need to be 
+re-filled out either – they will keep the values they had before, unless
+ you change them. For many applications this means the only things you 
+need to change from one packet to the next are the “payloadLength” and 
+the contents of the payload itself.</p>
+<p>If the transmitter is busy when this is called, this routine will 
+block until the transmitter is done with the previous packet. Typically 
+this is less than 3 milliseconds. If you don’t want to be blocked, do 
+not call this routine until (RadioStatus.TX_BUSY == 0).</p>
+<p>I’ve never seen it happen, but have read reports that (very rarely) 
+the radio firmware can crash and the radio will need to be reset. If 
+this happens, the driver will automatically reset the radio within 20 
+milliseconds; you don’t have to do anything but be aware of the (very 
+unlikely) possibility of being blocked for 20 ms. If this is a problem, 
+use RadioTXRaw() and manage it yourself.</p>
+<p>Note that if the radio doesn’t get an acknowledgement from the 
+far-end radio in a brief time (&lt; 500 uS; see IEEE 802.15.4 for 
+details), it will re-transmit the packet automatically. It will do this 
+twice before giving up (for a total of 3 transmissions).</p>
+<p>This improves the chance of the receiver getting the correct data, 
+but it is not a guarantee. An acknowledgement means the receiver got the
+ packet and computed a correct 16-bit CRC for it. It also releases the 
+transmitter to send the next packet. Don’t rely on the ACK as indicating
+ more than a high probability that the data was received correctly; a 16
+ bit CRC is short enough that you will occasionally see an errored 
+packet that has a correct CRC by chance. If you really need to be sure, 
+use your own CRC (I recommend a 64 bit one).</p>
+<p><span style="text-decoration: underline;"><em>UINT8 RadioTXResult(void);</em></span></p>
+<p>Returns status of the most-recently transmitted packet. The possible return values are:</p>
+<table border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td width="127">
+<p align="center">0</p>
+</td>
+<td valign="top" width="463">No result yet because TX is busy or far end hasn’t had enough time to respond.</td>
+</tr>
+<tr>
+<td width="127">
+<p align="center">TX_SUCCESS (1)</p>
+</td>
+<td valign="top" width="463">Packet was received and acknowledged by far end (*1)</td>
+</tr>
+<tr>
+<td width="127">
+<p align="center">TX_FAILED (2)</p>
+</td>
+<td valign="top" width="463">Packet was not acknowledged by far end (*2)</td>
+</tr>
+</tbody>
+</table>
+<p>*1 The number of re-transmissions used by the transmitter is in 
+RadioStatus.TX_RETRIES (0, 1, or 2). Acknowledgement by the far-end is 
+not a guarantee that the packet was delivered in all cases. In a 
+multi-node network, it is possible in some configurations that the 
+acknowledgment received was meant for a different transmitter (not you),
+ because IEEE 802.15.4 acknowledgments are not addressed.</p>
+<p>*2 It can happen that a packet was in fact received successfully at 
+the far-end, but the acknowledgment was not received locally. In this 
+case the local transmitter will attempt to re-send the packet up to 2 
+more times. If this happens, it is possible that the far-end receiver 
+will get up to 3 copies of the same packet; it is up to the receiver to 
+notice that they’re duplicates and discard the extras. (Check for 
+duplicate frame numbers.)</p>
+<p>If you don’t care whether the receiver got the packet, you don’t need to call this.</p>
+<p><span style="text-decoration: underline;"><em>UINT8 RadioWaitTXResult(void);</em></span></p>
+<p>Same as RadioTXResult(), except this routine blocks for up to 19 
+milliseconds, and always returns either TX_SUCCESS or TX_FALIED. (It 
+waits for the result.) Normally you’ll get a result in &lt; 3 ms, but it
+ could be up to 19 milliseconds if the radio crashes.</p>
+<p>Again, if you don’t care whether the receiver got the packet, you don’t need to call this.</p>
+<h3>API – Receiving</h3>
+<p><span style="text-decoration: underline;"><em>UINT8 RadioRXPacket(void);</em></span></p>
+<p>This returns the count of received packets waiting to be processed, 
+and puts the next packet to be processed (if any) into the structure 
+“Rx”. If there are no received packets, it returns 0.</p>
+<p>Received packets are buffered in RAM until you finish processing 
+them. The buffer can hold PACKET_BUFFERS packets (defined in the .h 
+file; must be a power of 2).</p>
+<p>If the receive buffer overruns (you don’t process them fast enough), 
+this will be reflected in RadioStatus.RXBufferOverruns (see the .h 
+file).</p>
+<p>If the return value is 0, there are no more un-processed packets in 
+the buffer, and the “Rx” structure still describes the previous packet.</p>
+<p>The next packet waiting to be processed is in Rx.</p>
+<p>In most modes the radio hardware filters out received packets that 
+aren’t addressed to your radio. But in some modes it doesn’t (useful for
+ network monitoring, etc.) This routine gives you all received packets 
+delivered by the radio hardware. If the radio doesn’t filter them, it is
+ up to you to look at the address fields and determine if the packet was
+ meant for you.</p>
+<p>Also be aware that successive identical packets (same frame number) 
+will be received if the far-end misses your acknowledgement (it will 
+re-transmit). Check for that if you care.</p>
+<p><span style="text-decoration: underline;"><em>void RadioDiscardPacket(void);</em></span></p>
+<p>Discards the received packet in Rx, freeing up memory in the buffer for another packet.</p>
+<p>Call this routine after you have processed each received packet.</p>
+<h3>API – Genera<strong>l</strong></h3>
+<p><span style="text-decoration: underline;"><em>BOOL RadioInit(void);</em></span></p>
+<p>Call this once to initialize the radio. It will set the device 
+address to MY_PAN_ID, MY_SHORT_ADDRESS, and MY_LONG_ADDRESS (all as 
+setup in radioHeaders.h), and set the radio to channel 11.</p>
+<p>You are free to change these at any time.</p>
+<p><span style="text-decoration: underline;"><em>BOOL RadioSetChannel(UINT8 channel);</em></span></p>
+<p>Tune radio to given channel. Returns true if it worked (if the 
+channel number was a valid IEEE 802.15.4 channel number, usually in the 
+range 11 to 25), false otherwise.</p>
+<p>Note that this does not affect the channel used by the far-end radio(s).</p>
+<p><span style="text-decoration: underline;"><em>void RadioSetAddress(UINT16 shortAddress, UINT64 longAddress, UINT16 panID);</em></span></p>
+<p>Use this to change your own node address. If your address won’t 
+change and you initialized with RadioInit(), then you never need to use 
+this.</p>
+<p><span style="text-decoration: underline;"><em>void RadioSetSleep(UINT8 powerState);</em></span></p>
+<p>If passed a 0, puts radio to sleep. It will draw 0.245 mA while sleeping.</p>
+<p>If passed a 1, wakes up the radio. It will draw approximately 28.4 mA
+ when in receive mode and a nominal peak current of 130 mA while 
+transmitting (but an average of only 65.8 mA as fast as I can get it to 
+transmit.)</p>
+<p>I have found that in practice you can completely disconnect the radio
+ from Vdd (using a MOSFET switch) for short periods (up to a few 
+seconds, anyway) while it’s in the “sleep” mode, without needing to 
+re-initialize the radio when waking up (if you power it back up and then
+ “wake” it, it works fine).</p>
+<p>If you periodically cycle between power-off and “sleep” this way, you
+ can effectively reduce the average sleep current to a small fraction of
+ 0.245 mA.</p>
+<p><span style="text-decoration: underline;"><em>UINT8 RadioEnergyDetect(void);</em></span></p>
+<p>Does a single 128 microsecond energy detect on the current channel. Returns the RSSI for the channel.</p>
+<p>This is mainly useful for protocols (like 802.15.4 and Zigbee) in 
+which you listen before transmitting to be sure no other radio is 
+transmitting on the channel at the same time. It also can be used to 
+choose a channel with less noise.</p>
+<h3>General notes</h3>
+<p>All routines here do not block (they return immediately) unless noted otherwise.</p>
+<p>There is code for interrupt-driven SPI transfers, but I never got it working (see thread on Microchip Forum about it; <a href="http://www.microchip.com/forums/m573732.aspx">http://www.microchip.com/forums/m573732.aspx</a>). The switch is SPI_INTERRUPTS; don’t turn it on.</p>
+<p>The hardware SPI transfer does work, and is significantly faster than bit-banging the SPI transfer (which also works).</p>
+<p>Defining the HARDWARE_SPI switch turns on the hardware mode. 
+Commenting it out uses bit-banging. The hardware mode is preferable 
+because it’s faster and requires less MCU cycles, but if your MCU 
+doesn’t support it, you can use bit-banging.</p>
+<p><span style="text-decoration: underline;"><em>PACKET Tx, Rx;</em></span></p>
+<p>These contain full descriptions of the packet to be transmitted or received.</p>
+<p><span style="text-decoration: underline;"><em>MRF24J40_STATUS volatile RadioStatus;</em></span></p>
+<p>Complete description of radio state.</p>
+<p><span style="text-decoration: underline;"><em>Addressing</em></span></p>
+<p>Each radio has 3 types of addresses:</p>
+<ul>
+<li>A “PAN ID” (16 bits)</li>
+<li>A “short address” (16 bits)</li>
+<li>A “long address” (64 bits)</li>
+</ul>
+<p>At any given time, a radio is addressed by a combination of a PAN ID 
+(shared by all other radios in the same network) and either a long or 
+short address.</p>
+<p>For the driver to receive a packet (in most modes), the incoming 
+packet must have a destination address containing the PAN ID of your 
+radio and the address of your radio (in either long or short form). It 
+also must be transmitted on the channel that the receiver is tuned to.</p>
+<p>These addresses are set during initialization in the RadioInit() 
+function, based on the values of the macros MY_PAN_ID, MY_SHORT_ADDRESS,
+ and MY_LONG_ADDRESS in radioHeaders.h.</p>
+<p>Please choose your own values (don’t keep the ones in radioHeaders.h;
+ otherwise everyone using this driver will be on the same PAN ID and 
+address). You can change the values either by changing the macros in 
+radioHeaders.h or by calling RadioSetAddress().</p>
+<h3>Demo code</h3>
+<p>The demo code gives a simple example of how to use the driver for 
+communication between a pair of radios, both of which have the same 
+address.</p>
+<p><span style="text-decoration: underline;"><em>Files</em></span></p>
+<p>The demo code adds the following source files to the driver:</p>
+<blockquote><p>hardware.c – Source for configuration of the hardware platform.<br>
+hardware.h – Pin definitions, etc. for the hardware platform.<br>
+debug.h – Debugging macros.<br>
+main.c – The demo program.</p></blockquote>
+<p><span style="text-decoration: underline;"><em>Platform customization</em></span></p>
+<p>To get the demo to run on your hardware, you’ll have to modify 
+hardware.c and hardware.h to match your platform. These files are 
+written now to support a PIC32MX440 MCU on my own hardware. You 
+shouldn’t have to modify any other files.</p>
+<p>In hardware.h, make sure that macro BAUD_RATE matches your terminal 
+baud rate, and the pin definitions (for radio control and SPI interface)
+ match your platform.</p>
+<p>In hardware.c, the function BoardInit() must initialize your 
+platform, and trigger the radio ISR function (in MRF24J40.c) when the 
+radio INT pin goes high. The ReadUART() function must return the ASCII 
+code sent by the terminal, or 0 if there is no data from the terminal.</p>
+<p><span style="text-decoration: underline;"><em>Running the demo</em></span></p>
+<p>Run the demo program on two boards. They should be within radio range of each other.</p>
+<p>Attach an ASCII terminal to the serial I/O of each MCU. (I used 
+UART2.) A PC-based terminal program such as Hyperterminal or PuTTY works
+ fine. The terminal should be set to 8 data bits, 1 stop bit, and no 
+parity, and the baud rate to BAUD_RATE (I use 460,800 bps).</p>
+<p>Type A, B, or C on either terminal. Each of the 3 keys should send a 
+different message (in a single packet) to the other radio. The message 
+is printed on the terminal of the receiver.</p>
+<p><span style="text-decoration: underline;"><em>How the demo code works</em></span></p>
+<p>The inner while() loop checks for received packets from the radio. If
+ it finds one, it checks that the frame number is not duplicated from 
+the previous packet (this can happen if the far-end missed our ACK and 
+re-transmitted; usually only happens under very weak signal conditions).
+ If it’s not a duplicate, it prints out the contents of the packet 
+payload.</p>
+<p>The switch() statement checks for keys from the terminal, and sends a packet containing a payload appropriate to each key.</p>
+<p>Note that during initialization the function RadioInitP2P() is 
+called. This initializes the Tx structure to send packets in a simple 
+point-to-point mode. Each packet contains data, doesn’t use security 
+(not implemented in the driver), requests an ack from the far-end radio,
+ and is addressed to the same address as the local radio (both radios 
+have the same address). It uses a 16-bit ‘short’ address. Here’s the 
+code:</p>
+<blockquote><p>void RadioInitP2P(void)<br>
+{<br>
+Tx.frameType = PACKET_TYPE_DATA;<br>
+Tx.securityEnabled = 0;<br>
+Tx.framePending = 0;<br>
+Tx.ackRequest = 1;<br>
+Tx.panIDcomp = 1;<br>
+Tx.dstAddrMode = SHORT_ADDR_FIELD;<br>
+Tx.frameVersion = 0;<br>
+Tx.srcAddrMode = NO_ADDR_FIELD;<br>
+Tx.dstPANID = RadioStatus.MyPANID;<br>
+Tx.dstAddr = RadioStatus.MyShortAddress;<br>
+Tx.payload = txPayload;<br>
+}</p></blockquote>
+<p>Once you’ve called this to initialize the Tx structure, further 
+packets can be sent just by changing the contents of the payload buffer 
+(*Tx.payload), setting the payload length (Tx.payloadLength), and 
+calling RadioTxPacket().</p>
+<p>See the demo source code (main.c) to see how this is done.</p>
+<h3>Further reading</h3>
+<p>If you want to understand how the driver works in detail, before looking at the source code, skim over:</p>
+<p><a href="http://standards.ieee.org/getieee802/download/802.15.4-2006.pdf">http://standards.ieee.org/getieee802/download/802.15.4-2006.pdf</a></p>
+<p>and</p>
+<p><a href="http://ww1.microchip.com/downloads/en/DeviceDoc/39776C.pdf">http://ww1.microchip.com/downloads/en/DeviceDoc/39776C.pdf</a></p>
+<p>The former is the IEEE spec. The latter is Microchip’s datasheet for 
+the radio – look at sections 3.2 (Initialization), 3.11 (Reception), and
+ 3.12 (Transmission). You can skip the rest.</p>
+<div id="end_post_ad" class="ads"><script type="text/javascript">
+							google_ad_client	=	"pub-651397917760";
+							google_ad_width		=	728;
+							google_ad_height	=	90;
+							google_ad_format	=	"728x90_as";
+							google_ad_type = "text_image";
+							google_color_border	=	"#FFFFFF";
+							google_color_bg		=	"#FFFFFF";
+							google_color_link	=	"#0000FF";
+							google_color_text	=	"#000000";
+							google_color_url	=	"#008000";
+							
+						</script><script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/show_ads.js"></script><ins id="aswift_0_expand" style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent"><ins id="aswift_0_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;" frameborder="0" height="90" width="728"></iframe></ins></ins><input value="Version: 1.11" type="hidden"></div>              </div>
+                                          <p class="post-metadata">
+                    This entry was posted on 2012 January 24, 04:04 and is filed under <a href="http://nerdfever.com/?cat=4" rel="category">Electronics</a>, <a href="http://nerdfever.com/?cat=9" rel="category">Software</a>. You can follow any responses to this entry through <a href="http://nerdfever.com/?feed=rss2&amp;p=1797" title="RSS 2.0">RSS 2.0</a>.
+                    You can skip to the end and leave a response. Pinging is currently not allowed.                        		  </p>
+
+        </div>
+        <!-- /post -->
+  
+    	
+  
+  <h3 class="comments">
+    68 Comments  </h3>
+
+  <!-- comments -->
+  <ul id="comments">
+    
+  <!-- comment entry -->
+  <li class="comment even thread-even depth-1 with-avatar" id="comment-42783">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-42783">#1</a> by <b id="commentauthor-42783">Jeremy</b> on 2013 May 15 - 09:52        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-42783">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/9b7f3a0c6865372562886a89c6d3555c.jpg" srcset="http://0.gravatar.com/avatar/9b7f3a0c6865372562886a89c6d3555c?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>*I forgot to tell that obviously i have two MRF24J40MA used, for each station.</p>
+</div>
+         <a id="comment-reply-42783"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment byuser comment-author-Dave bypostauthor odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-42814">
+   <div class="comment-mask admincomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-42814">#2</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-42814" href="http://nerdfever.com/">Dave</a></span> on 2013 May 15 - 15:23        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-42814">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/0f3f00dc835151d07f01293985d01f09.jpg" srcset="http://0.gravatar.com/avatar/0f3f00dc835151d07f01293985d01f09?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Hi Jeremy,</p>
+<p>The simplest solution is to get Microchip’s USB stack working enough 
+that you can hook a USB/serial adapter to it. I’ve done it; it’s not too
+ difficult.</p>
+<p>The header connector on the USB Starter Kit II does bring out the 
+UART (serial) pins; with the right connector you should be able to get 
+at them that way.  These will operate at 0/3.3v (not standard RS-232 
+levels), so you’d need a “TTL serial” USB adapter for those.</p>
+<p>I hope this helps!</p>
+<p>–Dave</p>
+</div>
+         <a id="comment-reply-42814"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment even thread-even depth-1 with-avatar" id="comment-51359">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-51359">#3</a> by <b id="commentauthor-51359">Christophe</b> on 2013 July 10 - 14:18        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-51359">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/58b178a2a576f6741f58f3f670eef2ad.jpg" srcset="http://2.gravatar.com/avatar/58b178a2a576f6741f58f3f670eef2ad?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Hi,</p>
+<p>do you support the promiscuous mode, I will try to make a sniffer for my RF4CE remote control.</p>
+</div>
+         <a id="comment-reply-51359"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-108745">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-108745">#4</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-108745" href="http://www.gatesoft.no/">Paal</a></span> on 2014 March 19 - 14:18        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-108745">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/7189905cf9c77f9cba9e298b2d6bef28.jpg" srcset="http://1.gravatar.com/avatar/7189905cf9c77f9cba9e298b2d6bef28?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Hi<br>
+Did you at any time port this to PIC18 ?<br>
+I would love to use it in my PIC18F44J50 project <img src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/simple-smile.png" alt=":-)" class="wp-smiley" style="height: 1em; max-height: 1em;"></p>
+</div>
+         <a id="comment-reply-108745"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment byuser comment-author-Dave bypostauthor even thread-even depth-1 with-avatar" id="comment-108763">
+   <div class="comment-mask admincomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-108763">#5</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-108763" href="http://nerdfever.com/">Dave</a></span> on 2014 March 19 - 19:26        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-108763">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/0f3f00dc835151d07f01293985d01f09.jpg" srcset="http://0.gravatar.com/avatar/0f3f00dc835151d07f01293985d01f09?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>@Paal – Sorry, if there was a PIC18 version I’d have posted something about it here.</p>
+<p>At least 2 separate people have told me they ported it to the PIC18 
+(so it’s not so hard), but neither has offered the code to me.</p>
+<p>Really – it’s not hard to do yourself.  If you compare my PIC32 
+version to the PIC24 version, you’ll see the places that need to be 
+changed for a new platform…</p>
+</div>
+         <a id="comment-reply-108763"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-122085">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-122085">#6</a> by <b id="commentauthor-122085">Andreea</b> on 2014 June 16 - 09:45        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-122085">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/6562d5417ad20dea278ae973f174eeae.jpg" srcset="http://0.gravatar.com/avatar/6562d5417ad20dea278ae973f174eeae?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Hey, can I use this code on a BeagleBone Black? I am running Angstrom, 3.8 kernel version. Thanks!</p>
+</div>
+         <a id="comment-reply-122085"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment byuser comment-author-Dave bypostauthor even thread-even depth-1 with-avatar" id="comment-122215">
+   <div class="comment-mask admincomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-122215">#7</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-122215" href="http://nerdfever.com/">Dave</a></span> on 2014 June 16 - 15:58        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-122215">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/0f3f00dc835151d07f01293985d01f09.jpg" srcset="http://0.gravatar.com/avatar/0f3f00dc835151d07f01293985d01f09?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><blockquote><p>Hey, can I use this code on a BeagleBone Black? I am running Angstrom, 3.8 kernel version. Thanks!</p></blockquote>
+<p>You’ll have to port it yourself. Shouldn’t be hard, but you will need
+ to know C, and how the module is addressed by your hardware.</p>
+</div>
+         <a id="comment-reply-122215"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-134553">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-134553">#8</a> by <b id="commentauthor-134553">mory</b> on 2014 July 19 - 19:54        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-134553">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/7e6e47eb6be76b672e768a49a3d30594.jpg" srcset="http://1.gravatar.com/avatar/7e6e47eb6be76b672e768a49a3d30594?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>hello all<br>
+whould please just tell me what values should be put in what registers so that i can use the mrf24j40 as receiver or tranciever<br>
+for example which registers must be set up i’m using stm32f106 microcontroler and i can’t understand enough of your codes<br>
+thanks<br>
+mory</p>
+</div>
+         <a id="comment-reply-134553"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment even thread-even depth-1 with-avatar" id="comment-134962">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-134962">#9</a> by <b id="commentauthor-134962">mory</b> on 2014 July 20 - 17:30        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-134962">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/7e6e47eb6be76b672e768a49a3d30594.jpg" srcset="http://1.gravatar.com/avatar/7e6e47eb6be76b672e768a49a3d30594?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>nobody?!<br>
+my question is after initialization (said in the data sheet) what registers I have to setup?<br>
+for transmitter and receiver which registers I have to setup?<br>
+please help me this my graduation work</p>
+</div>
+         <a id="comment-reply-134962"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-138008">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-138008">#10</a> by <b id="commentauthor-138008">mory</b> on 2014 July 25 - 17:24        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-138008">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/7e6e47eb6be76b672e768a49a3d30594.jpg" srcset="http://1.gravatar.com/avatar/7e6e47eb6be76b672e768a49a3d30594?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>realy ? nobody?</p>
+</div>
+         <a id="comment-reply-138008"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment byuser comment-author-Dave bypostauthor even thread-even depth-1 with-avatar" id="comment-138009">
+   <div class="comment-mask admincomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-138009">#11</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-138009" href="http://nerdfever.com/">Dave</a></span> on 2014 July 25 - 18:29        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-138009">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/0f3f00dc835151d07f01293985d01f09.jpg" srcset="http://0.gravatar.com/avatar/0f3f00dc835151d07f01293985d01f09?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Sorry, Mory – my bad. I just got around to approving the comment now.</p>
+<p>Look at the source code in the download file – that shows you exactly what you have to do to initialize the part.</p>
+<p>Or, look at the datasheet; it’s on page 90 (example 3-1).</p>
+<p>Cheers,</p>
+<p>–Dave</p>
+</div>
+         <a id="comment-reply-138009"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-164360">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-164360">#12</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-164360" href="http://www.elettronica-tirrito.it/">Salvatore Tirrito</a></span> on 2014 December 21 - 11:49        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-164360">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/23567ea450fd7f94dea548d54a96b03b.jpg" srcset="http://2.gravatar.com/avatar/23567ea450fd7f94dea548d54a96b03b?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Hi all, I’m working with the 
+source code uploaded for PIC24, I have PIC24FJ256GB108 Microcontroller 
+upon a my custom board. I have a problem, the source code has a bug that
+ periodically after about 2 minutes, it reset the running code. I can 
+not find the problem in the source code. has anyone encountered the same
+ bug?</p>
+<p>Tnk a lot<br>
+Salvatore</p>
+</div>
+         <a id="comment-reply-164360"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment byuser comment-author-Dave bypostauthor even thread-even depth-1 with-avatar" id="comment-166016">
+   <div class="comment-mask admincomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-166016">#13</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-166016" href="http://nerdfever.com/">Dave</a></span> on 2015 January 4 - 21:30        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-166016">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/0f3f00dc835151d07f01293985d01f09.jpg" srcset="http://0.gravatar.com/avatar/0f3f00dc835151d07f01293985d01f09?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>I’ve never used the PIC24 version but I’m sure my PIC32 version has no problem like that.</p>
+<p>You might try diffing the PIC24 version against my PIC32 version – 
+anything that changed that might cause the problem should stand out.</p>
+<p>Have you tried running the PIC24 code by itself, without any of your 
+own code? Maybe it’s something in your own code that’s causing the 
+reboot.</p>
+</div>
+         <a id="comment-reply-166016"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-166120">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-166120">#14</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-166120" href="http://www.elettronica-tirrito.it/">Salvatore Tirrito</a></span> on 2015 January 5 - 20:23        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-166120">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/23567ea450fd7f94dea548d54a96b03b.jpg" srcset="http://2.gravatar.com/avatar/23567ea450fd7f94dea548d54a96b03b?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Dear Dave thanks for your support,<br>
+I fix the bug setting the Fast RC oscillator with Postscaler and PLL 
+module instead of Primary oscillator (XT, HS, EC) and XT oscillator mode<br>
+substituting:<br>
+// _CONFIG2(FNOSC_PRI &amp; POSCMOD_XT) // Primary XT OSC with 4x PLL<br>
+with<br>
+_CONFIG2(FNOSC_FRCPLL &amp; POSCMOD_NONE &amp; PLLDIV_DIV2 &amp; PLL_96MHZ_ON) </p>
+<p>here all my configuration setting for PIC24FJ256GB108 Microcontroller:<br>
+ _CONFIG1(JTAGEN_OFF &amp; FWDTEN_OFF &amp; ICS_PGx2)                   
+                 // JTAG off, watchdog timer off, ICS on PGx1<br>
+ _CONFIG2(FNOSC_FRCPLL &amp; POSCMOD_NONE &amp; PLLDIV_DIV2 &amp; PLL_96MHZ_ON)                 // Primary XT OSC with 4x PLL<br>
+                                          //Primary XT OSC with 4x PLL<br>
+_CONFIG3(WPDIS_WPDIS)  </p>
+<p>I hope it can be useful to someone<br>
+Best Regards<br>
+Salvatore</p>
+<p>Best Regards</p>
+</div>
+         <a id="comment-reply-166120"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment even thread-even depth-1 with-avatar" id="comment-173908">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-173908">#15</a> by <b id="commentauthor-173908">Ted Jones</b> on 2015 April 16 - 15:31        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-173908">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/322ef9b26fdcbe04026424af77206b53.jpg" srcset="http://0.gravatar.com/avatar/322ef9b26fdcbe04026424af77206b53?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>I want to use the MRF24J40MA 
+module with a STM32 microcontroller and use something like the MiWi P2P 
+communication protocol. As the interface is an SPI bus then I’m assuming
+ that it can be used with any micro with an SPI bus as long as the code 
+to set up the SPI is changed. Is that correct? Thanks.</p>
+</div>
+         <a id="comment-reply-173908"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment byuser comment-author-Dave bypostauthor odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-174867">
+   <div class="comment-mask admincomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-174867">#16</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-174867" href="http://nerdfever.com/">Dave</a></span> on 2015 May 5 - 13:51        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-174867">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/0f3f00dc835151d07f01293985d01f09.jpg" srcset="http://0.gravatar.com/avatar/0f3f00dc835151d07f01293985d01f09?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Yes, ought to work.</p>
+</div>
+         <a id="comment-reply-174867"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment even thread-even depth-1 with-avatar" id="comment-176197">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-176197">#17</a> by <b id="commentauthor-176197">Sara</b> on 2015 August 5 - 12:06        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-176197">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/80f1ea449d93198c6117250de63f1880.jpg" srcset="http://2.gravatar.com/avatar/80f1ea449d93198c6117250de63f1880?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Hi Dave,<br>
+It’s been a month since I’m porting your library on an atmega32 based 
+board, but I’ve got nowhere and still can’t send/receive a packet!<br>
+Can you help me please? I’m very confused!!<br>
+Thanks in advance</p>
+</div>
+         <a id="comment-reply-176197"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+
+  <!-- comment entry -->
+  <li class="comment odd alt thread-odd thread-alt depth-1 with-avatar" id="comment-177002">
+   <div class="comment-mask regularcomment">
+    <div class="comment-main">
+     <div class="comment-wrap1">
+      <div class="comment-wrap2">
+       <div class="comment-head tiptrigger">
+        <p>
+          <a class="comment-id" href="#comment-177002">#18</a> by <span class="with-tooltip"><a class="comment-author" id="commentauthor-177002" href="http://tzermaan.com/">tzer</a></span> on 2015 August 26 - 08:10        </p>
+
+                <p class="controls tip">
+                           <a class="quote" title="Quote" href="javascript:void(0);"><span>Quote</span></a> 
+        </p>
+               </div>
+       <div class="comment-body clearfix" id="comment-body-177002">
+                  <div class="avatar"><img alt="" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/d211799ec16f8d22f07edf3c5bcc17a3.jpg" srcset="http://1.gravatar.com/avatar/d211799ec16f8d22f07edf3c5bcc17a3?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"></div>
+         
+         
+         <div class="comment-text"><p>Hi Dave, I intend to compile all 
+the information about this particular rf module to a blog post so that 
+it becomes easier to get started. </p>
+<p>Could I refer the code and info available at your website to be published on my blog?</p>
+<p>tzer</p>
+</div>
+         <a id="comment-reply-177002"></a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+</li><!-- #comment-## -->
+   </ul>
+   <div class="clear"></div>
+   
+           <div class="commentnavi">
+  	      <div class="commentpager">
+  	    	<a class="prev page-numbers" href="http://nerdfever.com/?p=1797&amp;cpage=1#comments">« Previous</a>
+<a class="page-numbers" href="http://nerdfever.com/?p=1797&amp;cpage=1#comments">1</a>
+<span class="page-numbers current">2</span>  	      </div>
+        </div>
+       
+   
+      <div id="respond">
+      <script type="text/javascript">
+       function validatecomment(form){
+         if(form.author.value == ('' || 'Your name (required)')){
+           alert('Please enter your name');
+           return false;
+         }
+         if(form.email.value == ('' || 'Your e-mail (required, will not be published)')){
+           alert('Please enter your email address');
+           return false;
+         }
+         if(form.comment.value == ('' || 'Type your comment here')){
+           alert('Please type a comment');
+           return false;
+         }
+         if(form.url.value == ('' || 'Your website')){
+           form.url.value = '';
+           return true;
+         }
+       }
+      </script>
+      <form action="http://nerdfever.com/wp-comments-post.php" method="post" id="commentform" onsubmit="return validatecomment(this);">
+        <div class="cancel-comment-reply"><a rel="nofollow" id="cancel-comment-reply-link" href="http://nerdfever.com/?p=1797#respond" style="display:none;">Cancel Reply</a></div>          	                <div id="author_info">
+            <div class="row">
+              <input name="author" id="author" class="textfield required" size="34" tabindex="1" value="Your name (required)" onfocus="if( this.value == 'Your name (required)') {this.value = '';}" onblur="if (this.value == '') { this.value = 'Your name (required)';}" type="text">
+            </div>
+            <div class="row">
+              <input name="email" id="email" class="textfield required" value="Your e-mail (required, will not be published)" onfocus="if(this.value == 'Your e-mail (required, will not be published)') { this.value = '';}" onblur="if (this.value == '') { this.value = 'Your e-mail (required, will not be published)';}" size="60" tabindex="2" type="text">
+            </div>
+            <div class="row">
+              <input name="url" id="url" class="textfield" value="Your website" onfocus="if(this.value == 'Your website') { this.value = 'http://';}" onblur="if ((this.value == 'http://') || (this.value == '')) { this.value = 'Your website';}" size="60" tabindex="3" type="text">
+            </div>
+
+  		  </div>
+                  
+        <!-- comment input -->
+        <div class="row">
+        	<textarea name="comment" id="comment" class="required" tabindex="4" rows="8" cols="60" onfocus="if(this.value == 'Type your comment here') {this.value = '';}" onblur="if(this.value == '') {this.value = 'Type your comment here';}">Type your comment here</textarea>
+        	            
+        	<input name="comment_post_ID" value="1797" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+        </div>
+        <!-- /comment input -->
+
+        <div id="submitbox" class="left">
+		
+         <input name="formInput" type="hidden">
+        <p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="0d9f58cd01" type="hidden"></p><div class="g-recaptcha" data-sitekey="6LfTockSAAAAAG_3X1YR9oNgrqyVBpGF7YlPaJ-7" data-theme="standard"><div><div style="width: 304px; height: 78px;"><iframe src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/anchor.htm" name="I0_1445011301709" id="I0_1445011301709" role="presentation" title="recaptcha widget" vspace="0" tabindex="0" style="" scrolling="no" marginwidth="0" marginheight="0" hspace="0" frameborder="0" height="78" width="304"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1; margin: 10px 25px; padding: 0px; resize: none;  display: none; "></textarea></div></div><script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/api.js"></script>            <div id="recaptcha-submit-btn-area">&nbsp;<input name="submit" id="submit" class="button" tabindex="6" value="Submit Comment" type="submit"></div>
+            <noscript>
+            <style type='text/css'>#submit {display:none;}</style>
+            <input name="submit" type="submit" id="submit-alt" tabindex="6"
+                value="Submit Comment"/> 
+            </noscript><p style="display: none;"></p>        </div>
+      <input id="ak_js" name="ak_js" value="1445011301042" type="hidden"></form>
+
+    </div>
+        
+  <!-- /comments -->
+
+
+            </div>
+     </div>
+     <!-- /first column -->
+     
+<!-- 2nd column (sidebar) -->
+<div class="col2">
+ <ul id="sidebar">
+
+    
+        <li class="block">
+      <!-- sidebar menu (categories) -->
+      <ul class="menu">
+        	<li class="cat-item cat-item-17"><a class="fadeThis" href="http://nerdfever.com/?cat=17">Aerodynamics</a>
+</li>
+	<li class="cat-item cat-item-19"><a class="fadeThis" href="http://nerdfever.com/?cat=19">Android</a>
+</li>
+	<li class="cat-item cat-item-22"><a class="fadeThis" href="http://nerdfever.com/?cat=22">Business ideas</a>
+</li>
+	<li class="cat-item cat-item-13"><a class="fadeThis" href="http://nerdfever.com/?cat=13">Economics</a>
+</li>
+	<li class="cat-item cat-item-4"><a class="fadeThis" href="http://nerdfever.com/?cat=4">Electronics</a>
+<ul class="children">
+	<li class="cat-item cat-item-6"><a class="fadeThis" href="http://nerdfever.com/?cat=6">SMD</a>
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-10"><a class="fadeThis" href="http://nerdfever.com/?cat=10">English</a>
+</li>
+	<li class="cat-item cat-item-7"><a class="fadeThis" href="http://nerdfever.com/?cat=7">Funny</a>
+</li>
+	<li class="cat-item cat-item-20"><a class="fadeThis" href="http://nerdfever.com/?cat=20">GMail</a>
+</li>
+	<li class="cat-item cat-item-18"><a class="fadeThis" href="http://nerdfever.com/?cat=18">iPhone</a>
+</li>
+	<li class="cat-item cat-item-3"><a class="fadeThis" href="http://nerdfever.com/?cat=3">Photos</a>
+</li>
+	<li class="cat-item cat-item-11"><a class="fadeThis" href="http://nerdfever.com/?cat=11">Politics</a>
+</li>
+	<li class="cat-item cat-item-5"><a class="fadeThis" href="http://nerdfever.com/?cat=5">Rockets</a>
+</li>
+	<li class="cat-item cat-item-8"><a class="fadeThis" href="http://nerdfever.com/?cat=8">Sad</a>
+</li>
+	<li class="cat-item cat-item-9"><a class="fadeThis" href="http://nerdfever.com/?cat=9">Software</a>
+</li>
+	<li class="cat-item cat-item-21"><a class="fadeThis" href="http://nerdfever.com/?cat=21">Speculation</a>
+</li>
+	<li class="cat-item cat-item-1"><a class="fadeThis" href="http://nerdfever.com/?cat=1">Uncategorized</a>
+</li>
+	<li class="cat-item cat-item-15"><a class="fadeThis" href="http://nerdfever.com/?cat=15">Video telecommunication</a>
+</li>
+	<li class="cat-item cat-item-16"><a class="fadeThis" href="http://nerdfever.com/?cat=16">Web design</a>
+</li>
+      </ul>
+      <!-- /sidebar menu -->
+    </li>
+    
+    		<li class="block widget widget_recent_entries" id="recent-posts-3"><div class="box"> <div class="wrapleft"><div class="wrapright"><div class="tr"><div class="bl"><div class="tl"><div class="br the-content">		<div class="titlewrap"><h4><span>Recent Posts</span></h4></div>		<ul>
+					<li>
+				<a href="http://nerdfever.com/?p=2982">Improved W4ZCB Latching Continuity Tester</a>
+						</li>
+					<li>
+				<a href="http://nerdfever.com/?p=2969">Webcam with privacy shutter &amp; mute</a>
+						</li>
+					<li>
+				<a href="http://nerdfever.com/?p=2945">A platform for crowdsourcing rewards for good deeds</a>
+						</li>
+					<li>
+				<a href="http://nerdfever.com/?p=2932">Remove all comments from C and C++ source code</a>
+						</li>
+					<li>
+				<a href="http://nerdfever.com/?p=2904">Half-baked copyright reform ideas &amp; nanotechnology</a>
+						</li>
+					<li>
+				<a href="http://nerdfever.com/?p=2885">Why is computer RAM disappearing?</a>
+						</li>
+					<li>
+				<a href="http://nerdfever.com/?p=2855">About flying cars</a>
+						</li>
+					<li>
+				<a href="http://nerdfever.com/?p=2835">A big number</a>
+						</li>
+				</ul>
+		</div></div></div></div></div></div> </div></li><li class="block widget widget_pages" id="pages-4"><div class="box"> <div class="wrapleft"><div class="wrapright"><div class="tr"><div class="bl"><div class="tl"><div class="br the-content"><div class="titlewrap"><h4><span>Pages</span></h4></div>		<ul>
+			<li class="page_item page-item-2"><a href="http://nerdfever.com/?page_id=2">About me</a></li>
+<li class="page_item page-item-695"><a href="http://nerdfever.com/?page_id=695">GPS-guided Rocket Recovery Project</a></li>
+		</ul>
+		</div></div></div></div></div></div> </div></li> </ul>
+
+
+<center>
+<br>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-6513979177606293";
+/* 160x600 vertical */
+google_ad_slot = "8267043639";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/show_ads.js">
+</script><ins id="aswift_1_expand" style="display:inline-table;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:160px;background-color:transparent"><ins id="aswift_1_anchor" style="display:block;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:160px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;" frameborder="0" height="600" width="160"></iframe></ins></ins>
+</center>
+
+</div>
+<!-- /2nd column -->     
+
+    </div>
+   </div>
+   <div class="clear-content"></div>
+  </div>
+  <!-- /main page block -->
+
+ </div>
+</div>
+<!-- /main wrappers -->
+
+
+ <!-- footer -->
+ <div id="footer">
+
+  <!-- page block -->
+  <div class="block-content">
+
+    
+<!-- footer widgets -->
+<ul id="footer-widgets" class="widgetcount-1">
+ <li class="block widget widget_pages" id="pages-3"><div class="the-content"><h6 class="title">Pages</h6>		<ul>
+			<li class="page_item page-item-2"><a href="http://nerdfever.com/?page_id=2">About me</a></li>
+<li class="page_item page-item-695"><a href="http://nerdfever.com/?page_id=695">GPS-guided Rocket Recovery Project</a></li>
+		</ul>
+		</div></li></ul>
+<div class="clear"></div>
+<!-- /footer widgets -->
+
+        <div class="add-content">
+      <script type="text/javascript"><!--
+google_ad_client = "ca-pub-6513979177606293";
+/* 728x90 Leaderboard */
+google_ad_slot = "9071282432";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/show_ads.js">
+</script><ins id="aswift_2_expand" style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent"><ins id="aswift_2_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:728px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;" frameborder="0" height="90" width="728"></iframe></ins></ins>    </div>
+     
+    <div class="copyright">
+     <p>
+     <!-- please do not remove this. respect the authors :) -->
+     Arclite theme by <a href="http://digitalnature.ro/">digitalnature</a> | powered by <a href="http://wordpress.org/">WordPress</a>     </p>
+     <p>
+     <a class="rss" href="http://nerdfever.com/?feed=rss2">Entries (RSS)</a> and <a href="http://nerdfever.com/?feed=comments-rss2">Comments (RSS)</a> <a href="javascript:void(0);" class="toplink">TOP</a>
+     <!-- 36 queries. 0.447 seconds. -->
+     </p>
+    </div>
+
+  </div>
+  <!-- /page block -->
+
+ </div>
+ <!-- /footer -->
+
+</div>
+<!-- /page -->
+
+  <script type="text/javascript">
+  /* <![CDATA[ */
+    var isIE6 = false; /* <- do not change! */
+    var isIE = false; /* <- do not change! */
+    var lightbox = 0;/* <- do not change! */
+  /* ]]> */
+  </script>
+  <!--[if lte IE 6]> <script type="text/javascript"> isIE6 = true; isIE = true; </script> <![endif]-->
+  <!--[if gte IE 7]> <script type="text/javascript"> isIE = true; </script> <![endif]-->
+
+
+            <script type="text/javascript">
+            var sub = document.getElementById('submit');
+            document.getElementById('recaptcha-submit-btn-area').appendChild (sub);
+            document.getElementById('submit').tabIndex = 6;
+            if ( typeof _recaptcha_wordpress_savedcomment != 'undefined') {
+                document.getElementById('comment').value = 
+                    _recaptcha_wordpress_savedcomment;
+            }
+            </script><script gapi_processed="true" type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/plusone.js">{lang: "en-US"}</script><script type="text/javascript">
+function wdgpo_plusone_click (el) {
+	if (typeof window._gaq != "undefined") {
+		 _gaq.push(['_trackEvent', 'Google +1', el.state, document.title]);
+	}
+}
+</script><script type="text/javascript" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/form.js"></script>
+
+
+
+<iframe tabindex="-1" style="width: 1px; height: 1px; position: absolute; top: -100px;" src="Simple%20driver%20code%20for%20Microchip%20MRF24J40%20radio%20%C2%AB%20Nerd%20Fever_files/postmessageRelay.htm" id="oauth2relay322886408" name="oauth2relay322886408"></iframe></body></html>

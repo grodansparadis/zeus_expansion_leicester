@@ -1,0 +1,8 @@
+Partlist exported from C:/Users/akhe/Documents/development/hardware_zeus/Ethernet/ethernet module/snow_expansion/802.15.4/expansion_mrf24j40ma_reva.sch at 2011-10-03 12:05:51
+
+Part Value      Device     Package    Description                Description              Supplier Partnumber         Price
+C1   100n       C-EUC0805  C0805      CAPACITOR, European symbol 100nF Cheramic capacitor Bejoken  522526             0,07 
+C2   100n       C-EUC0805  C0805      CAPACITOR, European symbol 100nF Cheramic capacitor Bejoken  522526             0,07 
+JP1             FE12-2     FE12-2     FEMALE HEADER                                       Digikey  SAM1212-50-ND      6,18 
+R1   10K        R-EU_R0805 R0805      RESISTOR, European symbol  Resistor                 Bejoken  454676             0,01 
+U$1  MRF24J40MA MRF24J40MA MRF24J40MA                            Radio tranceiver         Digikey  MRF24J40MB-I/RM-ND 192  
